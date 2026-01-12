@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="d-flex justify-content-between">
+      <div>
+        <h3 class="mb-1">{{ job.title }}</h3>
+        <div class="text-muted">{{ job.company }} • {{ job.location }} • {{ job.category }}</div>
+        {% if job.salary %}<div class="mt-1">Salary: <strong>{{ job.salary }}</strong></div>{% endif %}
+      </div>
+      <div class="text-muted small">{{ job.created_at|date:"d M Y" }}</div>
+    </div>
+
+    <hr>
+    <h5>Description</h5>
+    <p style="white-space: pre-wrap;">{{ job.description }}</p>
+
+    {% if job.is_external and job.external_url %}
+    <div class="alert alert-info">
+        Imported from <strong>Arbeitnow</strong>. Apply on the source website.
+    </div>
+    <a class="btn btn-primary" target="_blank" href="{{ job.external_url }}">Apply on Arbeitnow</a>
+
+    {% else %}
+        {% if user.is_authenticated and user.role == "job_seeker" %}
+            {% if already_applied %}
+            <div class="alert alert-warning">You already applied for this job.</div>
+            {% else %}
+            <a class="btn btn-success" href="{% url 'apply_job' job.id %}">Apply Now</a>
+            {% endif %}
+        {% elif not user.is_authenticated %}
+            <div class="alert alert-info">Please <a href="{% url 'login' %}">login</a> as Job Seeker to apply.</div>
+        {% endif %}
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

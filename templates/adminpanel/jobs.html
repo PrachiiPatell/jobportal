@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Admin - Jobs{% endblock %}
+{% block content %}
+<h3 class="mb-3">Manage Jobs</h3>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-striped table-hover m-0 align-middle">
+      <thead><tr><th>Title</th><th>Company</th><th>Location</th><th>Status</th><th style="width:220px;">Actions</th></tr></thead>
+      <tbody>
+        {% for j in jobs %}
+          <tr>
+            <td><a href="{% url 'job_detail' j.id %}">{{ j.title }}</a></td>
+            <td>{{ j.company }}</td>
+            <td>{{ j.location }}</td>
+            <td>{% if j.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+            <td>
+              <form method="post" action="{% url 'admin_toggle_job' j.id %}" class="d-inline">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-primary">Toggle</button>
+              </form>
+              <form method="post" action="{% url 'admin_delete_job' j.id %}" class="d-inline" onsubmit="return confirm('Delete this job?');">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

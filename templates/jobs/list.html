@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Jobs{% endblock %}
+{% block content %}
+<h3 class="mb-3">Find Jobs</h3>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label">Keyword</label>
+        <input class="form-control" name="q" value="{{ request.GET.q }}">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Location</label>
+        <input class="form-control" name="location" value="{{ request.GET.location }}">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Category</label>
+        <input class="form-control" name="category" value="{{ request.GET.category }}" placeholder="Software/Data...">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Company</label>
+        <input class="form-control" name="company" value="{{ request.GET.company }}">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Min Salary</label>
+        <input class="form-control" type="number" min="0" name="min_salary" value="{{ request.GET.min_salary }}">
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary">Search</button>
+        <a class="btn btn-outline-secondary" href="{% url 'job_list' %}">Reset</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if jobs %}
+  <div class="list-group shadow-sm">
+    {% for job in jobs %}
+      <a class="list-group-item list-group-item-action" href="{% url 'job_detail' job.id %}">
+        <div class="d-flex justify-content-between">
+          <div>
+            <div class="fw-semibold">{{ job.title }}</div>
+            <div class="text-muted small">{{ job.company }} • {{ job.location }} • {{ job.category }}</div>
+            {% if job.salary %}<div class="small">Salary: {{ job.salary }}</div>{% endif %}
+          </div>
+          <div class="text-muted small">{{ job.created_at|date:"d M Y" }}</div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="alert alert-info">No matching jobs found.</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+<h3 class="mb-3">Admin Dashboard</h3>
+
+<div class="row g-3">
+  <div class="col-md-3"><div class="card shadow-sm"><div class="card-body"><div class="text-muted">Users</div><div class="fs-3">{{ user_count }}</div></div></div></div>
+  <div class="col-md-3"><div class="card shadow-sm"><div class="card-body"><div class="text-muted">Jobs</div><div class="fs-3">{{ job_count }}</div></div></div></div>
+  <div class="col-md-3"><div class="card shadow-sm"><div class="card-body"><div class="text-muted">Active Jobs</div><div class="fs-3">{{ active_jobs }}</div></div></div></div>
+  <div class="col-md-3"><div class="card shadow-sm"><div class="card-body"><div class="text-muted">Applications</div><div class="fs-3">{{ app_count }}</div></div></div></div>
+</div>
+
+<div class="mt-4 d-flex gap-2">
+  <a class="btn btn-outline-primary" href="{% url 'admin_users' %}">Manage Users</a>
+  <a class="btn btn-outline-primary" href="{% url 'admin_jobs' %}">Manage Jobs</a>
+</div>
+{% endblock %}
