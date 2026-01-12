@@ -29,13 +29,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
 
 ]
 
@@ -59,10 +59,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "jobportal.wsgi.application"
 
-DDATABASES = {
+DATABASES = {
     "default": dj_database_url.config(
-        # If DATABASE_URL exists (Render), it will use it.
-        # Otherwise use your local DB_USER/DB_PASSWORD/... from .env
+        # Render will provide DATABASE_URL. Locally it will use the default below.
         default=(
             f"postgresql://{os.getenv('DB_USER','postgres')}:"
             f"{os.getenv('DB_PASSWORD','postgres')}@"
@@ -71,8 +70,11 @@ DDATABASES = {
             f"{os.getenv('DB_NAME','jobportal_db')}"
         ),
         conn_max_age=600,
+        # Require SSL only when DATABASE_URL exists (Render)
+        ssl_require=bool(os.getenv("DATABASE_URL")),
     )
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
